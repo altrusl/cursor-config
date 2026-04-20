@@ -1,0 +1,48 @@
+---
+description: General full-stack development guidelines for Lissa Health project
+alwaysApply: true
+---
+# General Full-Stack Development Rules
+
+## MCP Servers
+- Use `frontend-info` for any frontend-related questions (Vue, TypeScript, UI, resources) and `backend-info` for backend-related questions (PHP, JSON-RPC API, database schema).
+- Both MCP servers always provide up-to-date documentation; call them via `backend-info` and `frontend-info` tools.
+
+## Package Manager
+- Always use **pnpm** for installing dependencies. Do not use `npm` or `yarn`.
+
+## Development Scripts
+- `pnpm dev` in `frontend/` — starts Vue dev server (Vite).
+- Backend runs on a remote server via Docker (PHP 8.5-FPM + nginx).
+- When working on both parts, keep frontend dev server and backend running concurrently.
+
+## Code Quality
+- Follow coding standards: PSR-12 for PHP, TypeScript strict for frontend.
+- Run static analysis and linting before committing:
+  - PHP: `./vendor/phpstan/phpstan/phpstan analyse --configuration=phpstan.neon`
+  - Frontend: `pnpm lint-fix` (eslint) + `pnpm type-check` (vue-tsc)
+- Run `./format.sh` (backend) or `pnpm lint-fix` (frontend) for formatting.
+
+## Testing
+- Backend: PHPUnit (`composer test`) + Bruno API tests (`composer bru:ci`).
+- Frontend: Playwright for E2E tests (`pnpm test:e2e`). Use Playwright MCP for browser testing.
+- Ensure CI passes before opening a PR.
+
+## Environment & Secrets
+- All secrets (API keys, DB credentials) are stored in `.env` files at each root.
+- Do **not** commit `.env` or any credential files.
+- Use `.env.example` as reference for required keys.
+
+## Commit Guidelines
+- Run linting and formatting before committing.
+- Use clear commit messages; follow conventional commit style if team uses it.
+- Do **not** push with `force` unless explicitly requested.
+
+## Documentation
+- Keep documentation in Markdown under `/docs`.
+- When you need to reference project structure, open `@rules-index.mdc`.
+
+## Canonical Shared Rules
+- Source of truth: `organization/.cursor/rules/platform-shared-*.mdc`
+- Backend/frontend reference via `platform-shared-reference.mdc`
+- Product description: `organization/.cursor/rules/application-description.mdc`
