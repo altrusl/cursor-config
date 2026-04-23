@@ -1,9 +1,11 @@
 ---
 name: lissa-frontend-deploy
-description: Execute safe frontend deployments for Lissa Health with GitHub Actions (`build-and-deploy.yaml`, `deploy-staging-docker-image.yaml`, `deploy-prod-docker-image.yaml`) and explicit post-deploy verification. Use when user asks to deploy/redeploy/release frontend changes to dev/staging/prod, monitor rollout status, or collect deployment diagnostics.
+description: "[Lissa Health] Execute safe frontend deployments for Lissa Health with GitHub Actions (`build-and-deploy.yaml`, `deploy-staging-docker-image.yaml`, `deploy-prod-docker-image.yaml`) and explicit post-deploy verification. Use when user asks to deploy/redeploy/release frontend changes to dev/staging/prod, monitor rollout status, or collect deployment diagnostics. Only for /src/lissa-health/ projects."
 ---
 
 # Lissa Frontend Deploy
+
+> **Project:** Lissa Health (`/src/lissa-health/`)
 
 Follow this workflow for `/src/lissa-health/frontend`.
 

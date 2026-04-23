@@ -1,8 +1,10 @@
 ---
 name: lissa-server-logs-db-debug
-description: Investigate backend incidents on Lissa Health servers via SSH, container logs, and MySQL diagnostics with environment-aware checklists. Use when the user asks to inspect prod/staging/healthvault errors, queue failures, payment issues, document processing failures, or DB data inconsistencies.
+description: "[Lissa Health] Investigate backend incidents on Lissa Health servers via SSH, container logs, and MySQL diagnostics with environment-aware checklists. Use when the user asks to inspect prod/staging/healthvault errors, queue failures, payment issues, document processing failures, or DB data inconsistencies. Only for /src/lissa-health/ projects."
 ---
 # Lissa Server Logs and DB Debug
+
+> **Project:** Lissa Health (`/src/lissa-health/`)
 
 ## Mandatory Context
 
@@ -45,12 +47,18 @@ Always read first:
 
 ```bash
 # App host
+
+> **Project:** Lissa Health (`/src/lissa-health/`)
 ssh -i /src/lissa-health/backend/ssh/tomsk.pem -p 2223 ubuntu@185.53.106.4
 
 # Container status
+
+> **Project:** Lissa Health (`/src/lissa-health/`)
 cd /opt/lissa-health/<env>/compose && docker compose ps
 
 # Backend container logs (recent)
+
+> **Project:** Lissa Health (`/src/lissa-health/`)
 docker logs --tail 300 <backend-container-name>
 ```
 

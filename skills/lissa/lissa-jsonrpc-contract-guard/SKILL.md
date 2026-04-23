@@ -1,9 +1,11 @@
 ---
 name: lissa-jsonrpc-contract-guard
-description: Keep JSON-RPC contracts consistent across backend, frontend, docs, and tests (method docs, params/returns, validation, typing, and consumers). Use when any JSON-RPC method is added/changed/removed.
+description: "[Lissa Health] Keep JSON-RPC contracts consistent across backend, frontend, docs, and tests (method docs, params/returns, validation, typing, and consumers). Use when any JSON-RPC method is added/changed/removed. Only for /src/lissa-health/ projects."
 ---
 
 # Lissa JSON-RPC Contract Guard
+
+> **Project:** Lissa Health (`/src/lissa-health/`)
 
 Use this skill when changing JSON-RPC APIs (new methods, payload shape changes, renamed fields, new error codes).
 

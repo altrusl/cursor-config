@@ -1,9 +1,11 @@
 ---
 name: lissa-backend-qa-guard
-description: Run a minimal, repeatable backend quality gate for Lissa Health (format, PHPStan, tests, and DB-dependent notes) and produce a short readiness report. Use before PRs and before deploys.
+description: "[Lissa Health] Run a minimal, repeatable backend quality gate for Lissa Health (format, PHPStan, tests, and DB-dependent notes) and produce a short readiness report. Use before PRs and before deploys. Only for /src/lissa-health/ projects."
 ---
 
 # Lissa Backend QA Guard
+
+> **Project:** Lissa Health (`/src/lissa-health/`)
 
 Use this skill for `/src/lissa-health/backend` after making PHP/config changes or before creating a PR.
 

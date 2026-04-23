@@ -1,9 +1,12 @@
 ---
 name: lissa-code-documentation
-description: Automatically update tech-docs when adding new features or changing code. Use proactively after implementing backend modules, API endpoints, frontend components, or database changes. Ensures documentation stays in sync with code.
+description: "[Lissa Health] "[Lissa Health] Automatically update tech-docs when adding new features or changing code. Use proactively after implementing backend modules, API endpoints, frontend components, or database changes. Only for /src/lissa-health/ projects." Only for /src/lissa-health/ projects."
 ---
 
 # Code Documentation Skill
+
+> **Project:** Lissa Health (`/src/lissa-health/`)
+> **Scope:** backend, frontend, docs repositories
 
 Автоматическое обновление документации при добавлении/изменении кода.
 

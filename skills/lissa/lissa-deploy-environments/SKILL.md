@@ -1,8 +1,10 @@
 ---
 name: lissa-deploy-environments
-description: Deploy Lissa Health backend/frontend to staging, production, or healthvault with a strict preflight, workflow run, verification, and rollback flow. Use when the user asks to deploy, release, run GitHub Actions workflows, promote builds, or verify deployment health.
+description: "[Lissa Health] Deploy Lissa Health backend/frontend to staging, production, or healthvault with a strict preflight, workflow run, verification, and rollback flow. Use when the user asks to deploy, release, run GitHub Actions workflows, promote builds, or verify deployment health. Only for /src/lissa-health/ projects."
 ---
 # Lissa Deploy Environments
+
+> **Project:** Lissa Health (`/src/lissa-health/`)
 
 ## Mandatory Context
 
@@ -46,15 +48,23 @@ Treat those rules as source of truth for environment mapping and deployment poli
 
 ```bash
 # 1) Find deploy workflows
+
+> **Project:** Lissa Health (`/src/lissa-health/`)
 gh workflow list
 
 # 2) Trigger deploy workflow (example pattern)
+
+> **Project:** Lissa Health (`/src/lissa-health/`)
 gh workflow run "<workflow-name>" --ref "<branch>" -f target_environment="<env>"
 
 # 3) Inspect recent runs for this workflow
+
+> **Project:** Lissa Health (`/src/lissa-health/`)
 gh run list --workflow "<workflow-name>" --limit 5
 
 # 4) Watch a specific run
+
+> **Project:** Lissa Health (`/src/lissa-health/`)
 gh run watch "<run-id>"
 ```
 

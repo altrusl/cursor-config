@@ -1,9 +1,11 @@
 ---
 name: lissa-cursor-rules-maintenance
-description: Рефакторинг и поддержка Cursor rules/skills/agents в Lissa Health: минимизация alwaysApply, корректные globs, устранение дублей, защита от секретов, выравнивание platform SOT через organization.
+description: "[Lissa Health] Рефакторинг и поддержка Cursor rules/skills/agents в Lissa Health: минимизация alwaysApply, корректные globs, устранение дублей, защита от секретов, выравнивание platform SOT через organization. Only for /src/lissa-health/ projects."
 ---
 
 # Lissa Cursor Rules Maintenance
+
+> **Project:** Lissa Health (`/src/lissa-health/`)
 
 Использовать, когда меняются файлы в `.cursor/rules`, `.cursor/skills`, `.cursor/agents` в любом подпроекте Lissa Health.
 

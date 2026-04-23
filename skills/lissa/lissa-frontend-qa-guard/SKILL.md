@@ -1,9 +1,11 @@
 ---
 name: lissa-frontend-qa-guard
-description: Run a minimal frontend quality gate for Lissa Health frontend (lint, type-check, optional Playwright smoke) and produce a short readiness report. Use before PRs and before deploys.
+description: "[Lissa Health] Run a minimal frontend quality gate for Lissa Health frontend (lint, type-check, optional Playwright smoke) and produce a short readiness report. Use before PRs and before deploys. Only for /src/lissa-health/ projects."
 ---
 
 # Lissa Frontend QA Guard
+
+> **Project:** Lissa Health (`/src/lissa-health/`)
 
 Use this skill for `/src/lissa-health/frontend` after making Vue/TS/config changes or before creating a PR.
 

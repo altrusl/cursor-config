@@ -1,9 +1,11 @@
 ---
 name: lissa-ai-pipeline-smoke
-description: Run a minimal smoke workflow for AI document processing (Documents → HealthRecords extraction/classification) with real data, logs correlation, and schema validation checks. Use after prompt/schema/pipeline changes.
+description: "[Lissa Health] Run a minimal smoke workflow for AI document processing (Documents → HealthRecords extraction/classification) with real data, logs correlation, and schema validation checks. Use after prompt/schema/pipeline changes. Only for /src/lissa-health/ projects."
 ---
 
 # Lissa AI Pipeline Smoke
+
+> **Project:** Lissa Health (`/src/lissa-health/`)
 
 Use this skill for `/src/lissa-health/backend` after changes in:
 

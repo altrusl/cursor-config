@@ -1,9 +1,11 @@
 ---
 name: lissa-backend-deploy
-description: Execute safe backend deployments for Lissa Health (staging/prod/healthvault) with preflight checks, quality gate, workflow run, verification, and rollback notes. Use when user asks to deploy/redeploy/release backend changes.
+description: "[Lissa Health] Execute safe backend deployments for Lissa Health (staging/prod/healthvault) with preflight checks, quality gate, workflow run, verification, and rollback notes. Use when user asks to deploy/redeploy/release backend changes. Only for /src/lissa-health/ projects."
 ---
 
 # Lissa Backend Deploy
+
+> **Project:** Lissa Health (`/src/lissa-health/`)
 
 Use this skill for `/src/lissa-health/backend`.
 

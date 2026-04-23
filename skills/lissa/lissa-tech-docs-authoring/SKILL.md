@@ -1,9 +1,11 @@
 ---
 name: lissa-tech-docs-authoring
-description: Правильное добавление и обновление техдоков Lissa Health (структура tech-docs, permanent vs temporary, обязательная индексация VitePress, проверка сборки). Использовать при любых изменениях в /docs.
+description: "[Lissa Health] Правильное добавление и обновление техдоков Lissa Health (структура tech-docs, permanent vs temporary, обязательная индексация VitePress, проверка сборки). Использовать при любых изменениях в /docs. Only for /src/lissa-health/ projects."
 ---
 
 # Lissa Tech Docs Authoring
+
+> **Project:** Lissa Health (`/src/lissa-health/`)
 
 Этот навык применяется в репозитории `/src/lissa-health/docs`.
 

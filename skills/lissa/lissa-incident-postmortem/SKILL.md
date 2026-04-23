@@ -1,8 +1,10 @@
 ---
 name: lissa-incident-postmortem
-description: Build a structured incident postmortem with RCA, timeline, and action items from logs, DB evidence, and deploy context. Use when the user asks for RCA, postmortem, incident summary, or follow-up action planning.
+description: "[Lissa Health] Build a structured incident postmortem with RCA, timeline, and action items from logs, DB evidence, and deploy context. Use when the user asks for RCA, postmortem, incident summary, or follow-up action planning. Only for /src/lissa-health/ projects."
 ---
 # Lissa Incident Postmortem
+
+> **Project:** Lissa Health (`/src/lissa-health/`)
 
 ## Mandatory Context
 
@@ -53,6 +55,8 @@ Read first:
 
 ```markdown
 # Incident Postmortem
+
+> **Project:** Lissa Health (`/src/lissa-health/`)
 
 Incident ID: <id>
 Environment: <env>

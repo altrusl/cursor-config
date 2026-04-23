@@ -1,8 +1,10 @@
 ---
 name: lissa-release-notes-from-commits
-description: Generate deploy-ready release notes and changelog from git commits, workflow runs, and verification results. Use when the user asks for release notes, changelog generation, deployment summary, or "what changed" between two refs.
+description: "[Lissa Health] Generate deploy-ready release notes and changelog from git commits, workflow runs, and verification results. Use when the user asks for release notes, changelog generation, deployment summary, or "what changed" between two refs. Only for /src/lissa-health/ projects."
 ---
 # Lissa Release Notes From Commits
+
+> **Project:** Lissa Health (`/src/lissa-health/`)
 
 ## Mandatory Context
 
@@ -49,6 +51,8 @@ gh run list --limit 10
 
 ```markdown
 # Release Notes
+
+> **Project:** Lissa Health (`/src/lissa-health/`)
 
 Environment: <env>
 Repo: <repo>
