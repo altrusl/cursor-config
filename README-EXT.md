@@ -3,6 +3,7 @@
 Что сделал:
 - Обновил `proxyctl` в `/home/altay/.local/bin/proxyctl`:
   - `on/off` теперь переключает не только SOCKS-туннель, но и прокси-настройки самого Remote Cursor Server.
+  - `proxyctl` теперь также поддерживает управляемый wrapper `~/.local/bin/git`, который перед каждым вызовом `git` автоматически применяет текущее состояние `~/.config/proxyctl/proxy-env.sh` (чтобы `git push` не застревал на старом proxy env после `off`).
   - На `on` пишет в `/home/altay/.cursor-server/data/Machine/settings.json`:
     - `http.proxy = socks5://127.0.0.1:1080`
     - `http.proxySupport = override`
@@ -27,3 +28,7 @@
 
 Отключение режима:
 - `proxyctl off`
+
+Важно:
+- Для `git` ручной `source ~/.config/proxyctl/proxy-env.sh` больше не нужен (wrapper применяет режим автоматически).
+- Для остальных CLI-инструментов (`curl`, `gh`, etc.) ручной `source` все еще нужен в уже открытой shell-сессии.
