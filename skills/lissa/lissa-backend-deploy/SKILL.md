@@ -22,7 +22,13 @@ Run:
 
 - `git status --short --branch`
 - `git log -1 --oneline`
-- `gh auth status`
+- `gh auth status` (if `gh` fails due to proxy, run with the prefix below)
+
+If `gh` fails with proxy-related errors (e.g. `socks5h`), use:
+
+```bash
+env -u ALL_PROXY -u all_proxy -u HTTPS_PROXY -u https_proxy -u HTTP_PROXY -u http_proxy -u NO_PROXY -u no_proxy gh <command>
+```
 
 If there are local changes, do not deploy until the working tree is clean and the target commit SHA is identified.
 
@@ -49,6 +55,12 @@ Watch completion:
 
 - `gh run list --workflow <workflow-file-or-name> --limit 1`
 - `gh run watch <run-id> --exit-status`
+
+Confirm final status (watch exit codes can be misleading):
+
+```bash
+gh run view <run-id> --json status,conclusion,url
+```
 
 If failed:
 

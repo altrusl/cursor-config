@@ -7,6 +7,8 @@ description: "[Lissa Health] Keep JSON-RPC contracts consistent across backend, 
 
 > **Project:** Lissa Health (`/src/lissa-health/`)
 
+For **OpenAPI SoT + codegen + sync gates**, use **`lissa-jsonrpc-contract-first`** (`/src/cursor-config/skills/lissa/lissa-jsonrpc-contract-first/`).
+
 Use this skill when changing JSON-RPC APIs (new methods, payload shape changes, renamed fields, new error codes).
 
 ## 1) Identify contract delta

@@ -12,7 +12,7 @@ Before doing anything, read:
 
 - `/src/lissa-health/organization/.cursor/rules/platform-shared-deploy-ops-sot.mdc`
 - `/src/lissa-health/organization/.cursor/rules/platform-shared-devops-branding-docs.mdc`
-- `/src/lissa-health/docs/tech-docs/ops/ai-runbook.md`
+- `/src/lissa-health/docs/tech-docs/operations/runbooks/ai-runbook.md`
 
 Treat those rules as source of truth for environment mapping and deployment policy.
 

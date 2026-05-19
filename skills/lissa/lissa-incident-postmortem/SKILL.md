@@ -11,7 +11,7 @@ description: "[Lissa Health] Build a structured incident postmortem with RCA, ti
 Read first:
 
 - `/src/lissa-health/organization/.cursor/rules/platform-shared-deploy-ops-sot.mdc`
-- `/src/lissa-health/docs/tech-docs/ops/ai-runbook.md`
+- `/src/lissa-health/docs/tech-docs/operations/runbooks/ai-runbook.md`
 
 ## Use This Skill When
 

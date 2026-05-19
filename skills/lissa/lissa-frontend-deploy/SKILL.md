@@ -26,7 +26,13 @@ Run:
 - `git log -1 --oneline`
 - `pnpm type-check` (after code edits)
 - `pnpm lint-fix` (after code edits if lint-sensitive files were touched)
-- `gh auth status`
+- `gh auth status` (if `gh` fails due to proxy, run with the prefix below)
+
+If `gh` fails with proxy-related errors (e.g. `socks5h`), use:
+
+```bash
+env -u ALL_PROXY -u all_proxy -u HTTPS_PROXY -u https_proxy -u HTTP_PROXY -u http_proxy -u NO_PROXY -u no_proxy gh <command>
+```
 
 Guardrails:
 - Never use `pkill`, `kill`, `killall` on `vite`, `node`, `pnpm`, or dev servers.
@@ -39,8 +45,11 @@ Deploy sequentially: `dev` first, then `staging` (then `prod` only by explicit r
 
 ### Dev
 
+Prefer **push to `dev`** and watch the auto-deploy (the workflow triggers on `push` to `dev`).
+If you must run it manually, dispatch it from `dev`:
+
 ```bash
-gh workflow run build-and-deploy.yaml --ref main -f environment=dev
+gh workflow run build-and-deploy.yaml --ref dev -f environment=dev
 ```
 
 ### Staging
@@ -73,6 +82,12 @@ Watch:
 
 ```bash
 gh run watch <run-id> --exit-status
+```
+
+Confirm final status (watch exit codes can be misleading):
+
+```bash
+gh run view <run-id> --json status,conclusion,url
 ```
 
 If failed:
