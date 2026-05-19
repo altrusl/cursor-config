@@ -12,7 +12,7 @@ Always read first:
 
 - `/src/lissa-health/organization/.cursor/rules/platform-shared-deploy-ops-sot.mdc`
 - `/src/lissa-health/organization/.cursor/rules/platform-shared-devops-branding-docs.mdc`
-- `/src/lissa-health/docs/tech-docs/ops/ai-runbook.md`
+- `/src/lissa-health/docs/tech-docs/operations/runbooks/p0-p1-incident-response.md`
 
 ## Use This Skill When
 
@@ -47,22 +47,19 @@ Always read first:
 
 ```bash
 # App host
-
-> **Project:** Lissa Health (`/src/lissa-health/`)
 ssh -i /src/lissa-health/backend/ssh/tomsk.pem -p 2223 ubuntu@185.53.106.4
 
 # Container status
-
-> **Project:** Lissa Health (`/src/lissa-health/`)
 cd /opt/lissa-health/<env>/compose && docker compose ps
 
 # Backend container logs (recent)
-
-> **Project:** Lissa Health (`/src/lissa-health/`)
 docker logs --tail 300 <backend-container-name>
 ```
 
-For DB host access via jump host, use ProxyJump pattern from shared rules.
+Primary DB diagnostics path (current topology):
+
+- run SQL from backend container (`DB_HOST=mysql`) or directly via `docker exec lissa-health-mysql mysql ...` on Tomsk.
+- use legacy `DB_HOST_OLD` / ProxyJump path only for rollback-era investigations.
 
 ## Canonical SQL Snippets
 
@@ -79,7 +76,7 @@ SELECT id, queue, job, attempts, maxAttempts, errorMessage, createdAt, completed
 FROM job_queue
 WHERE status = 'failed'
 ORDER BY id DESC
-LIMIT 100;
+LIMIT 50;
 
 -- One health record with raw status/data
 SELECT id, patientId, recordType, status, deletedAt, data, createdAt, updatedAt
