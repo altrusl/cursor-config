@@ -32,6 +32,10 @@ env -u ALL_PROXY -u all_proxy -u HTTPS_PROXY -u https_proxy -u HTTP_PROXY -u htt
 
 If there are local changes, do not deploy until the working tree is clean and the target commit SHA is identified.
 
+If repository exposes a local pre-deploy gate, run it before remote workflow dispatch:
+
+- `pnpm qa:predeploy`
+
 ## 2) Backend QA gate (mandatory after code/config edits)
 
 Run the minimal quality gate first:
@@ -48,6 +52,10 @@ Do not guess workflow names or inputs. Always read the repo workflows first:
 - `gh workflow list`
 
 Then trigger the correct workflow using `gh workflow run ... --ref ... -f ...`.
+
+For dev deploy, prefer CI-chained flow (`Backend: Deploy Dev` triggered by successful `Backend: CI` on `dev`) instead of assuming direct push-trigger deploy.
+
+*Note: Prod deploy now promotes the staging image instead of rebuilding. Ensure `preprod-readiness-gate` checks (CI + Staging deploy) are green for the commit.*
 
 ## 4) Watch run and fail fast
 

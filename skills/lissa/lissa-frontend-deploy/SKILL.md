@@ -39,13 +39,17 @@ Guardrails:
 - Never use destructive remote commands unless user explicitly asks.
 - Never force-push protected branches.
 
+If repository exposes a local pre-deploy gate, run it before remote workflow dispatch:
+
+- `pnpm qa:predeploy`
+
 ## 3) Trigger workflow with `gh`
 
 Deploy sequentially: `dev` first, then `staging` (then `prod` only by explicit request).
 
 ### Dev
 
-Prefer **push to `dev`** and watch the auto-deploy (the workflow triggers on `push` to `dev`).
+Prefer **push to `dev`** and watch the auto-deploy (`Frontend: Deploy Dev` is chained from successful `Frontend: CI` run on `dev` via `workflow_run`).
 If you must run it manually, dispatch it from `dev`:
 
 ```bash
@@ -63,6 +67,7 @@ gh workflow run deploy-staging-docker-image.yaml --ref main -f brand=lissa-healt
 ```bash
 gh workflow run deploy-prod-docker-image.yaml --ref main -f brand=lissa-health -f confirm_deploy=DEPLOY
 ```
+*Note: Prod deploy now promotes the staging image instead of rebuilding. Ensure `preprod-readiness-gate` checks (CI + Staging deploy) are green for the commit.*
 
 ### HealthVault
 

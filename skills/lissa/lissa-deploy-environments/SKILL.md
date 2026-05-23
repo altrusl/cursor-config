@@ -30,6 +30,7 @@ Treat those rules as source of truth for environment mapping and deployment poli
    - Confirm branch/ref to deploy.
 2. **Preflight**
    - Check local git state (`git status --short --branch`).
+   - Run local pre-deploy QA gate when available (`pnpm qa:predeploy` for staging/prod/healthvault; `pnpm qa:local` is the lighter push/PR gate).
    - Check workflow list (`gh workflow list`) and locate deploy workflow.
    - Confirm required workflow inputs.
 3. **Run workflow**
@@ -48,27 +49,21 @@ Treat those rules as source of truth for environment mapping and deployment poli
 
 ```bash
 # 1) Find deploy workflows
-
-> **Project:** Lissa Health (`/src/lissa-health/`)
 gh workflow list
 
 # 2) Trigger deploy workflow (example pattern)
-
-> **Project:** Lissa Health (`/src/lissa-health/`)
 gh workflow run "<workflow-name>" --ref "<branch>" -f target_environment="<env>"
 
 # 3) Inspect recent runs for this workflow
-
-> **Project:** Lissa Health (`/src/lissa-health/`)
 gh run list --workflow "<workflow-name>" --limit 5
 
 # 4) Watch a specific run
-
-> **Project:** Lissa Health (`/src/lissa-health/`)
 gh run watch "<run-id>"
 ```
 
 Use exact workflow names/inputs from repository files, not memory.
+
+For dev environment, prefer workflows chained from successful CI (`workflow_run`) instead of raw push assumptions.
 
 ## Verification Checklist
 

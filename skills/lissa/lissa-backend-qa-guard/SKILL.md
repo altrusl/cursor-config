@@ -17,6 +17,22 @@ Identify:
 - whether changes affect database schema or JSON-RPC payload contracts,
 - whether the goal is local correctness, CI readiness, or pre-deploy verification.
 
+## Preferred one-command gate
+
+If repository has script `qa:local`, run it first:
+
+- `pnpm qa:local`
+
+For JSON-RPC/contract surface changes, also run:
+
+- `pnpm qa:contracts`
+
+Before staging/prod/healthvault deploy readiness, prefer:
+
+- `pnpm qa:predeploy`
+
+If these scripts are unavailable or fail due environment-specific reasons, continue with manual checks below.
+
 ## Preflight (mandatory)
 
 Run:
@@ -49,13 +65,14 @@ Fix issues in touched areas first. Avoid broad refactors unless required.
 
 Run unit tests when the change is non-trivial:
 
-- `composer test`
+- `./vendor/bin/phpunit --exclude-group database` (for unit tests without DB)
+- `./vendor/bin/phpunit --group database` (for DB tests, requires local MySQL)
 
 If the change affects API flows, consider Bruno:
 
-- `composer bru:ci`
+- `pnpm run bru:smoke:remote` (against dev/staging)
 
-Note: CI runners without a database may fail DB-dependent smoke checks. Treat DB-less failures as expected only when evidence confirms the workflow requires DB access.
+Note: CI now has a dedicated `phpunit-db` job for DB-dependent tests using a MySQL service container.
 
 ## Database and migrations (when relevant)
 

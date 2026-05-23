@@ -17,6 +17,18 @@ Identify:
 - whether changes are brand-sensitive (health-vault vs default brand),
 - whether a quick local gate is enough or an e2e smoke is needed.
 
+## Preferred one-command gate
+
+If repository has script `qa:local`, run it first:
+
+- `pnpm qa:local`
+
+Before staging/prod deploy readiness checks, prefer:
+
+- `pnpm qa:predeploy`
+
+If these scripts are unavailable or fail due environment-specific constraints, continue with manual checks below.
+
 ## Preflight (mandatory)
 
 Run:
@@ -24,6 +36,8 @@ Run:
 - `git status --short --branch`
 - `git diff` (and `git diff --staged` if applicable)
 - `git log -1 --oneline`
+
+Ensure `pnpm-lock.yaml` is up-to-date. CI uses strict `--frozen-lockfile` and will fail if the lockfile drifts from `package.json`.
 
 ## Lint (mandatory for code changes)
 
