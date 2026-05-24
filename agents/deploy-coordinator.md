@@ -34,4 +34,5 @@ Guardrails:
 - Never run destructive infra commands unless explicitly requested.
 - Prefer incremental rollout and explicit verification between stages.
 - Never use `pkill`/`kill`/`killall` for `vite`, `node`, or `pnpm` on remote SSH hosts.
+- Enforce main-only delivery: deploy from `main`, promote environments with immutable image manifests/tags (`source_run_id` / release artifacts), avoid mutable runtime `.env` as source of truth.
 - For dev auto-deploy flows, prefer CI-chained trigger (`workflow_run` after successful CI) over raw push-trigger assumptions.

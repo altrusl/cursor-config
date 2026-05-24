@@ -18,6 +18,7 @@ Collect:
 - whether deploy is code-only or includes config-sensitive changes.
 
 If `staging` or `prod` is requested, require `main` branch because workflows enforce it.
+Use `main-only` flow: release commit must already be in `main`, then promote immutable image manifests between environments.
 
 ## 2) Preflight checks (mandatory)
 
@@ -47,27 +48,32 @@ If repository exposes a local pre-deploy gate, run it before remote workflow dis
 
 Deploy sequentially: `dev` first, then `staging` (then `prod` only by explicit request).
 
+Mandatory promotion gate for `staging`/`prod`:
+- do not deploy directly from `feature/*` or unmerged commit;
+- deploy only from `main`;
+- for promotion workflows, resolve source via immutable release manifest (`source_run_id`) or explicit promote tag.
+
 ### Dev
 
-Prefer **push to `dev`** and watch the auto-deploy (`Frontend: Deploy Dev` is chained from successful `Frontend: CI` run on `dev` via `workflow_run`).
-If you must run it manually, dispatch it from `dev`:
+Prefer CI-chained deploy (`Frontend: Deploy Dev` is triggered by successful `Frontend: CI` run on `main` via `workflow_run`).
+If you must run it manually, dispatch it from `main`:
 
 ```bash
-gh workflow run build-and-deploy.yaml --ref dev -f environment=dev
+gh workflow run build-and-deploy.yaml --ref main
 ```
 
 ### Staging
 
 ```bash
-gh workflow run deploy-staging-docker-image.yaml --ref main -f brand=lissa-health -f remote_root=/opt/lissa-health/staging
+gh workflow run deploy-staging-docker-image.yaml --ref main -f brand=lissa-health -f remote_root=/opt/lissa-health/staging -f source_run_id=<frontend-deploy-dev-run-id>
 ```
 
 ### Production (manual confirmation required)
 
 ```bash
-gh workflow run deploy-prod-docker-image.yaml --ref main -f brand=lissa-health -f confirm_deploy=DEPLOY
+gh workflow run deploy-prod-docker-image.yaml --ref main -f brand=lissa-health -f confirm_deploy=DEPLOY -f source_run_id=<frontend-deploy-staging-run-id>
 ```
-*Note: Prod deploy now promotes the staging image instead of rebuilding. Ensure `preprod-readiness-gate` checks (CI + Staging deploy) are green for the commit.*
+*Note: Prod deploy promotes the staging image. Ensure `preprod-readiness-gate` checks (`Frontend: CI` + `Frontend: Deploy Staging`) are green for target `main` SHA.*
 
 ### HealthVault
 

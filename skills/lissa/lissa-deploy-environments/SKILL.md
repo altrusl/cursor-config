@@ -28,11 +28,14 @@ Treat those rules as source of truth for environment mapping and deployment poli
 1. **Scope and target**
    - Identify repo (`backend` or `frontend`) and target environment.
    - Confirm branch/ref to deploy.
+   - For `staging` / `prod` / `healthvault`: enforce `main-only` promotion flow (`feature/* -> PR -> main -> deploy dev -> promote immutable image to higher envs`).
 2. **Preflight**
    - Check local git state (`git status --short --branch`).
    - Run local pre-deploy QA gate when available (`pnpm qa:predeploy` for staging/prod/healthvault; `pnpm qa:local` is the lighter push/PR gate).
    - Check workflow list (`gh workflow list`) and locate deploy workflow.
    - Confirm required workflow inputs.
+   - If target is `staging` / `prod` / `healthvault` and target SHA is not in `main`, stop and merge PR to `main` first.
+   - For promotion workflows, prefer `source_run_id` + release manifest artifact over mutable runtime `.env` discovery.
 3. **Run workflow**
    - Trigger with `gh workflow run ... --ref ... -f ...`.
    - Track latest run via `gh run list --workflow ... --limit 1`.
