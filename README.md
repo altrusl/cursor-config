@@ -58,6 +58,12 @@ cursor-config/
 | `lissa-release-notes-from-commits` | Генерация release notes |
 | `lissa-cursor-rules-maintenance` | Maintenance cursor rules |
 
+## Production Monitoring Agent
+
+| Agent | Назначение |
+|-------|------------|
+| `prod-runtime-auditor` | Ежедневный аудит prod логов/инцидентов с отделением CI/CD noise и deep-dive по document processing |
+
 ## Как это работает
 
 1. `~/.cursor/skills` → симлинк на `/src/cursor-config/skills`
