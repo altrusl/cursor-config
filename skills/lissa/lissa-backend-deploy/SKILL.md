@@ -63,6 +63,12 @@ For dev deploy, prefer CI-chained flow (`Backend: Deploy Dev` triggered by succe
 
 *Note: Prod deploy now promotes the staging image instead of rebuilding. Ensure `preprod-readiness-gate` checks (CI + Staging deploy) are green for the commit.*
 
+If changes touch host cron artifacts (`ops/cron/**`, `scripts/ops/**`):
+
+- treat cron rollout as part of deployment scope;
+- install/update cron file on target host from repo template;
+- verify cron entries reference existing scripts and recent run logs.
+
 ## 4) Watch run and fail fast
 
 Watch completion:
@@ -90,6 +96,7 @@ Minimum checks:
 - JSON-RPC `system.health`
 - JSON-RPC `system.ready`
 - container state (no restart loop) on target host
+- for cron rollouts: cron file installed, syntax accepted, and scripts executable on target host
 
 Notes:
 

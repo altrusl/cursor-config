@@ -18,7 +18,7 @@ Collect:
 - whether deploy is code-only or includes config-sensitive changes.
 
 If `staging` or `prod` is requested, require `main` branch because workflows enforce it.
-Use `main-only` flow: release commit must already be in `main`, then promote immutable image manifests between environments.
+Use `main-only` flow with local merge: release commit must already be merged locally into `main` and pushed, then promote immutable image manifests between environments.
 
 ## 2) Preflight checks (mandatory)
 
@@ -26,7 +26,10 @@ Run:
 - `git status --short --branch`
 - `git log -1 --oneline`
 - `pnpm type-check` (after code edits)
-- `pnpm lint-fix` (after code edits if lint-sensitive files were touched)
+- `pnpm lint` (after code edits if lint-sensitive files were touched)
+- For local preflight on large branches, prefer bounded lint:
+  - `FRONTEND_LINT_TIMEOUT_SECONDS=60 pnpm lint`
+  - `ESLINT_COMPAT_TIMEOUT_MS=90000 pnpm lint:eslint:compat:changed`
 - `gh auth status` (if `gh` fails due to proxy, run with the prefix below)
 
 If `gh` fails with proxy-related errors (e.g. `socks5h`), use:
@@ -49,7 +52,7 @@ If repository exposes a local pre-deploy gate, run it before remote workflow dis
 Deploy sequentially: `dev` first, then `staging` (then `prod` only by explicit request).
 
 Mandatory promotion gate for `staging`/`prod`:
-- do not deploy directly from `feature/*` or unmerged commit;
+- do not deploy from unmerged local branches or detached commits;
 - deploy only from `main`;
 - for promotion workflows, resolve source via immutable release manifest (`source_run_id`) or explicit promote tag.
 
@@ -117,6 +120,10 @@ Minimum checks per environment:
   - `https://staging.lissa-health.com/health`
   - `https://lissa-health.com/health` (prod)
 - Workflow smoke job result (Playwright step in workflow).
+- For static-landing builds:
+  - first root visit renders static landing correctly (full-width `body/#app`, no broken critical CSS),
+  - second root visit opens app directly when warm cache marker is present,
+  - optional third-wave assets start after delay (~5s), not immediately on login open.
 - If health fails, inspect runtime with `project-0-frontend-ops` MCP:
   - `ops_health_check`
   - `ops_compose_ps`

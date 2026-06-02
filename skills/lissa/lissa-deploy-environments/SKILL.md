@@ -12,7 +12,7 @@ Before doing anything, read:
 
 - `/src/lissa-health/organization/.cursor/rules/platform-shared-deploy-ops-sot.mdc`
 - `/src/lissa-health/organization/.cursor/rules/platform-shared-devops-branding-docs.mdc`
-- `/src/lissa-health/docs/tech-docs/operations/runbooks/ai-runbook.md`
+- `/src/lissa-health/docs/tech-docs/how-to/operations/deploy/environments-runbook.md`
 
 Treat those rules as source of truth for environment mapping and deployment policy.
 
@@ -28,13 +28,13 @@ Treat those rules as source of truth for environment mapping and deployment poli
 1. **Scope and target**
    - Identify repo (`backend` or `frontend`) and target environment.
    - Confirm branch/ref to deploy.
-   - For `staging` / `prod` / `healthvault`: enforce `main-only` promotion flow (`feature/* -> PR -> main -> deploy dev -> promote immutable image to higher envs`).
+   - For `staging` / `prod` / `healthvault`: enforce `main-only` promotion flow with local merge (`local feature branch -> local merge to main -> push main -> deploy dev -> promote immutable image to higher envs`).
 2. **Preflight**
    - Check local git state (`git status --short --branch`).
-   - Run local pre-deploy QA gate when available (`pnpm qa:predeploy` for staging/prod/healthvault; `pnpm qa:local` is the lighter push/PR gate).
+   - Run local pre-deploy QA gate when available (`pnpm qa:predeploy` for staging/prod/healthvault; `pnpm qa:local` is the lighter push gate).
    - Check workflow list (`gh workflow list`) and locate deploy workflow.
    - Confirm required workflow inputs.
-   - If target is `staging` / `prod` / `healthvault` and target SHA is not in `main`, stop and merge PR to `main` first.
+   - If target is `staging` / `prod` / `healthvault` and target SHA is not in `main`, stop and merge locally to `main` first, then push.
    - For promotion workflows, prefer `source_run_id` + release manifest artifact over mutable runtime `.env` discovery.
 3. **Run workflow**
    - Trigger with `gh workflow run ... --ref ... -f ...`.
@@ -45,6 +45,7 @@ Treat those rules as source of truth for environment mapping and deployment poli
    - `system.health`
    - `system.ready`
    - container state/restarts on target host
+   - if deployment includes host cron artifacts (`ops/cron/**`, `scripts/ops/**`), verify cron install/update and executable scripts on target host
 5. **Summarize**
    - include workflow URL, run ID, commit SHA, target env, verification output.
 
@@ -67,6 +68,8 @@ gh run watch "<run-id>"
 Use exact workflow names/inputs from repository files, not memory.
 
 For dev environment, prefer workflows chained from successful CI (`workflow_run`) instead of raw push assumptions.
+
+When repository uses server-side cron for maintenance/regression jobs, do not require scheduled GitHub workflows for those jobs.
 
 ## Verification Checklist
 

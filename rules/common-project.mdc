@@ -16,6 +16,14 @@ alwaysApply: true
 - Backend runs on a remote server via Docker (PHP 8.5-FPM + nginx).
 - When working on both parts, keep frontend dev server and backend running concurrently.
 
+## Critical Process Safety (Global)
+- Applies to all repositories/workspaces using this rules pack.
+- Never run broad process-kill commands (`killall`, `pkill`, `kill` by name) for `node`, `pnpm`, `vite`, `cursor`, `ssh`, or system daemons.
+- Never run host restart commands (`reboot`, `shutdown`) unless user explicitly asks.
+- Prefer stopping long-running tasks with terminal `Ctrl+C` in the exact terminal where they were started.
+- `kill <pid>` is allowed only when the agent started that exact PID in the same turn and verified it is not a Cursor/SSH/system process.
+- If there is any uncertainty about process ownership, do not kill; ask the user to stop it manually.
+
 ## Code Quality
 - Follow coding standards: PSR-12 for PHP, TypeScript strict for frontend.
 - Run static analysis and linting before committing:

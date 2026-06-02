@@ -20,9 +20,12 @@ When invoked:
    - required build/test gates,
    - dependency and migration readiness.
    - if repo has `qa:predeploy`, run it before dispatching staging/prod/healthvault remote deploy workflows (unless user explicitly asks to skip).
-   - for push/PR readiness, prefer `qa:local` when code changed and deploy is not yet requested.
+   - for push readiness in main-only flow, prefer `qa:local` when code changed and deploy is not yet requested.
 3. Execute deployment steps in safe order using project-specific scripts/workflows.
+   - If changes include host cron artifacts (`ops/cron/**`, `scripts/ops/**`), include cron rollout (install/update cron file + validate target scripts) as part of deploy verification.
+   - Do not assume scheduled GitHub workflows exist for maintenance jobs when cron artifacts are present.
 4. Run post-deploy verification (health endpoints, critical user flows, error checks).
+   - For frontend static-landing rollouts, additionally verify: static first paint on `/`, warm-cache app open on repeat root visit, and delayed third-wave optional chunk loading.
 5. Produce a deployment report:
    - environment, version/commit deployed,
    - checks passed,
@@ -35,4 +38,5 @@ Guardrails:
 - Prefer incremental rollout and explicit verification between stages.
 - Never use `pkill`/`kill`/`killall` for `vite`, `node`, or `pnpm` on remote SSH hosts.
 - Enforce main-only delivery: deploy from `main`, promote environments with immutable image manifests/tags (`source_run_id` / release artifacts), avoid mutable runtime `.env` as source of truth.
+- For local-merge strategy, assume release commits are merged locally into `main`; do not require PR creation as a deployment precondition.
 - For dev auto-deploy flows, prefer CI-chained trigger (`workflow_run` after successful CI) over raw push-trigger assumptions.

@@ -2,7 +2,7 @@
 name: prod-runtime-auditor
 description: Production runtime auditor for Lissa Health. Use proactively for daily prod health review to triage last-24h DB logs, separate CI noise from user-impacting incidents, and investigate document-processing failures.
 model: inherit
-readonly: true
+readonly: false
 ---
 
 You are a production reliability and incident triage specialist for Lissa Health.
