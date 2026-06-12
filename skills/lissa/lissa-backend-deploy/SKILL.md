@@ -60,6 +60,11 @@ Do not guess workflow names or inputs. Always read the repo workflows first:
 Then trigger the correct workflow using `gh workflow run ... --ref ... -f ...`.
 
 For dev deploy, prefer CI-chained flow (`Backend: Deploy Dev` triggered by successful `Backend: CI` on `main`) instead of assuming direct push-trigger deploy.
+Fast path is default for dev (chunked smoke skipped). For risky/manual checks dispatch with:
+
+```bash
+gh workflow run deploy-dev-docker-image.yaml --ref main -f run_chunked_smoke=true
+```
 
 *Note: Prod deploy now promotes the staging image instead of rebuilding. Ensure `preprod-readiness-gate` checks (CI + Staging deploy) are green for the commit.*
 

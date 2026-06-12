@@ -19,7 +19,7 @@ Treat those rules as source of truth for environment mapping and deployment poli
 ## Use This Skill When
 
 - User asks to deploy backend/frontend.
-- User asks to deploy to `staging`, `prod`/`production`, or `healthvault`.
+- User asks to deploy to `dev`, `staging`, `prod`/`production`, or `healthvault`.
 - User asks to run/check GitHub Actions deploy workflow.
 - User asks to verify release health or rollback.
 
@@ -32,6 +32,7 @@ Treat those rules as source of truth for environment mapping and deployment poli
 2. **Preflight**
    - Check local git state (`git status --short --branch`).
    - Run local pre-deploy QA gate when available (`pnpm qa:predeploy` for staging/prod/healthvault; `pnpm qa:local` is the lighter push gate).
+   - Use repo-specific deploy skill flow (`lissa-backend-deploy` / `lissa-frontend-deploy`) instead of ad-hoc manual command chains.
    - Check workflow list (`gh workflow list`) and locate deploy workflow.
    - Confirm required workflow inputs.
    - If target is `staging` / `prod` / `healthvault` and target SHA is not in `main`, stop and merge locally to `main` first, then push.
@@ -40,6 +41,9 @@ Treat those rules as source of truth for environment mapping and deployment poli
    - Trigger with `gh workflow run ... --ref ... -f ...`.
    - Track latest run via `gh run list --workflow ... --limit 1`.
    - Watch completion with `gh run watch <run-id>`.
+   - For `dev` manual dispatch use fast defaults; enable deep checks only by explicit input:
+     - frontend: `run_critical_smoke=true`
+     - backend: `run_chunked_smoke=true`
 4. **Verify runtime**
    - `/health`
    - `system.health`

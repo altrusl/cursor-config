@@ -1,6 +1,6 @@
 ---
 name: lissa-frontend-deploy
-description: "[Lissa Health] Execute safe frontend deployments for Lissa Health with GitHub Actions (`build-and-deploy.yaml`, `deploy-staging-docker-image.yaml`, `deploy-prod-docker-image.yaml`) and explicit post-deploy verification. Use when user asks to deploy/redeploy/release frontend changes to dev/staging/prod, monitor rollout status, or collect deployment diagnostics. Only for /src/lissa-health/ projects."
+description: "[Lissa Health] Execute safe frontend deployments for Lissa Health with GitHub Actions (`deploy-dev-docker-image.yaml`, `deploy-staging-docker-image.yaml`, `deploy-prod-docker-image.yaml`) and explicit post-deploy verification. Use when user asks to deploy/redeploy/release frontend changes to dev/staging/prod, monitor rollout status, or collect deployment diagnostics. Only for /src/lissa-health/ projects."
 ---
 
 # Lissa Frontend Deploy
@@ -62,7 +62,13 @@ Prefer CI-chained deploy (`Frontend: Deploy Dev` is triggered by successful `Fro
 If you must run it manually, dispatch it from `main`:
 
 ```bash
-gh workflow run build-and-deploy.yaml --ref main
+gh workflow run deploy-dev-docker-image.yaml --ref main -f run_critical_smoke=false
+```
+
+For risky changes or explicit deep verification requests, use:
+
+```bash
+gh workflow run deploy-dev-docker-image.yaml --ref main -f run_critical_smoke=true
 ```
 
 ### Staging
