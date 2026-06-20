@@ -91,3 +91,13 @@ Produce a short report:
 - notable risks (DB-required, migration risk, API contract changes),
 - whether it is PR-ready and deploy-ready.
 
+## Self-learning
+
+After each QA run, if a tool or check failed unexpectedly (not due to actual code issues):
+- Record the failure pattern and resolution.
+- If the failure is a skill gap (wrong command, missing step), apply a minimal fix to this SKILL.md.
+- Known patterns:
+  - PHPStan on PHP 8.5 may show false positives for new syntax — check PHPStan version compatibility.
+  - `composer install` can be slow on self-hosted runners under memory pressure — if it hangs >3 min, check swap usage.
+  - Format check (`php-cs-fixer`) requires `./format.sh` to have been run first — remind user if dry-run fails.
+

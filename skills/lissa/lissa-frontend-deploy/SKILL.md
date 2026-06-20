@@ -135,6 +135,26 @@ Minimum checks per environment:
   - `ops_compose_ps`
   - `ops_logs_tail` / `ops_container_logs`
 
+### Brand verification (MANDATORY for prod/healthvault)
+
+After ANY deploy to `prod` or `healthvault`, verify the correct brand is served:
+```bash
+# Prod must show "Lissa Health"
+ops_ssh_exec: docker exec lissa-health-prod-frontend grep '<title>' /usr/share/nginx/html/index.html
+# Expected: <title>Lissa Health</title>
+
+# Healthvault must show "Health Vault"
+ops_ssh_exec: docker exec lissa-health-healthvault-frontend grep '<title>' /usr/share/nginx/html/index.html
+# Expected: <title>Health Vault</title>
+```
+If brands are swapped → **STOP and rollback immediately** using `FRONTEND_IMAGE_PREVIOUS` in `.env`.
+
+### Known failure: HealthVault/Lissa brand mixing
+
+The HealthVault deploy workflow (`white-label-brand-worker.yaml`) ALWAYS targets `/opt/lissa-health/healthvault/`. Never pass `remote_root=/opt/lissa-health/prod` to it. If triggered simultaneously with Lissa Health prod deploy, they can race on the same runner and overwrite each other's docker image tags.
+
+**Prevention**: Never run HealthVault deploy and Lissa Health prod deploy simultaneously on the same commit.
+
 Always include environment name in every diagnostic summary.
 
 ## 6) Deployment report format
@@ -147,3 +167,26 @@ Return:
 - incidents or rollback status.
 
 If rollback happened, explicitly mention `FRONTEND_IMAGE_PREVIOUS` recovery path managed by deploy action.
+
+## 7) Self-learning: post-deploy feedback loop
+
+After every deploy (success or failure), analyze the run and update knowledge:
+
+1. **Record outcome** in `/src/lissa-health/docs/_workspace/deploy-log.jsonl` — one JSON line per deploy:
+   ```json
+   {"ts":"ISO","repo":"frontend","env":"staging","sha":"abc123","workflow":"deploy-staging-docker-image.yaml","runId":123,"conclusion":"success","durationSec":201,"failStep":null,"rootCause":null}
+   ```
+   On failure, populate `failStep` (step name) and `rootCause` (one-line summary).
+
+2. **Pattern detection**: Before each deploy, read recent entries from the log. If the same `failStep` or `rootCause` appeared in >=2 of the last 5 deploys:
+   - Warn the user proactively ("This step failed 2/5 recent deploys, consider...").
+   - If a code fix is possible, apply it automatically.
+
+3. **Skill self-improvement**: If you discover a concrete gap in this skill during a deploy (wrong workflow name, missing input, incorrect sequence), apply a minimal diff to this SKILL.md file immediately. Keep changes small and evidence-based.
+
+4. **Known failure patterns** (auto-learned):
+   - Promotion gates require successful preceding workflows — verify with `gh run list` before triggering staging/prod.
+   - `confirm_deploy=DEPLOY` is required for prod workflows — always include this input.
+   - Deploy lock `frontend-runtime-deploy-lock` serializes all frontend deploy workflows — do not trigger multiple deploy envs simultaneously.
+   - Frontend CI can be slow (~17 min) on the self-hosted runner under CPU contention — if CI is the blocking gate, check runner load before re-triggering.
+   - `source_run_id` for staging/prod promotion should reference the preceding environment's successful deploy run, not a CI run.

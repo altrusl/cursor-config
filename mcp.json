@@ -1,0 +1,28 @@
+{
+    "mcpServers": {
+      "medoo": {
+        "command": "node",
+        "args": [
+          "/src/lissa-health/backend/mcp-servers/medoo/dist/index.js"
+        ]
+      },
+      "ops": {
+        "command": "node",
+        "args": [
+          "/src/lissa-health/frontend/mcp-servers/mcp-ops/dist/index.js"
+        ]
+      },
+      "frontend-info": {
+        "command": "node",
+        "args": [
+          "/src/lissa-health/frontend/mcp-servers/frontend-info/dist/index.js"
+        ]
+      },
+      "backend-info": {
+        "command": "node",
+        "args": [
+          "/src/lissa-health/backend/mcp-servers/alvita/dist/index.js"
+        ]
+      }
+    }
+  }

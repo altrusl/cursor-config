@@ -123,3 +123,25 @@ Return:
 - verification results (`/health`, `system.health`, `system.ready`);
 - incidents/rollback status.
 
+## 8) Self-learning: post-deploy feedback loop
+
+After every deploy (success or failure), analyze the run and update knowledge:
+
+1. **Record outcome** in `/src/lissa-health/docs/_workspace/deploy-log.jsonl` — one JSON line per deploy:
+   ```json
+   {"ts":"ISO","repo":"backend","env":"staging","sha":"abc123","workflow":"deploy-staging-docker-image.yaml","runId":123,"conclusion":"success","durationSec":82,"failStep":null,"rootCause":null}
+   ```
+   On failure, populate `failStep` (step name) and `rootCause` (one-line summary).
+
+2. **Pattern detection**: Before each deploy, read recent entries from the log. If the same `failStep` or `rootCause` appeared in >=2 of the last 5 deploys:
+   - Warn the user proactively ("This step failed 2/5 recent deploys, consider...").
+   - If a code fix is possible (e.g., missing `confirm_deploy` input, wrong workflow ref), apply it automatically.
+
+3. **Skill self-improvement**: If you discover a concrete gap in this skill during a deploy (wrong workflow name, missing input, incorrect sequence), apply a minimal diff to this SKILL.md file immediately. Keep changes small and evidence-based.
+
+4. **Known failure patterns** (auto-learned):
+   - `shivammathur/setup-php@v2` fails transiently on self-hosted runners under CPU pressure — re-run the failed job once before escalating.
+   - `confirm_deploy=DEPLOY` is required for prod and healthvault workflows — always include this input.
+   - Promotion gates require successful preceding workflows — check with `gh run list` before triggering downstream deploys.
+   - Deploy lock `backend-runtime-deploy-lock` serializes all backend deploy workflows — do not trigger multiple deploy envs simultaneously; wait for each to complete.
+
