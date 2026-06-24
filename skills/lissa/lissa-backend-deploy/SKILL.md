@@ -93,6 +93,13 @@ If failed:
 
 Stop rollout chain on the first failure and summarize the failing step.
 
+### Mandatory completion discipline
+
+- Do not finish the task while any deploy/qa command started in this session is still running.
+- Wait for all started workflows/processes to reach terminal state (`success`/`failure`/`cancelled`).
+- If a run fails, inspect failed logs, apply a fix when possible, and re-run the failed stage.
+- Only report deployment as complete after explicit verification of final run conclusions.
+
 ## 5) Post-deploy verification (mandatory)
 
 Minimum checks:
@@ -100,6 +107,9 @@ Minimum checks:
 - `/health` on target domain
 - JSON-RPC `system.health`
 - JSON-RPC `system.ready`
+- JSON-RPC `dispatcher.heartbeat`
+- Realtime transport endpoint `/connection/websocket` (Centrifugo)
+- Safe dispatcher contract-smoke for `dispatcher.reserve` (expected validation error, no queue mutation)
 - container state (no restart loop) on target host
 - for cron rollouts: cron file installed, syntax accepted, and scripts executable on target host
 

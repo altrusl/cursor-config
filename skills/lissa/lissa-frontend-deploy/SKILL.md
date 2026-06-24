@@ -54,7 +54,8 @@ Deploy sequentially: `dev` first, then `staging` (then `prod` only by explicit r
 Mandatory promotion gate for `staging`/`prod`:
 - do not deploy from unmerged local branches or detached commits;
 - deploy only from `main`;
-- for promotion workflows, resolve source via immutable release manifest (`source_run_id`) or explicit promote tag.
+- for promotion workflows, resolve source via immutable release manifest (`source_run_id`) or explicit promote tag;
+- `source_run_id` may reference either successful `Frontend: Deploy Dev` run (preferred) or successful `Frontend: Build Dev` run (must be auto-resolved to linked Deploy Dev run before artifact promotion).
 
 ### Dev
 
@@ -76,6 +77,8 @@ gh workflow run deploy-dev-docker-image.yaml --ref main -f run_critical_smoke=tr
 ```bash
 gh workflow run deploy-staging-docker-image.yaml --ref main -f brand=lissa-health -f remote_root=/opt/lissa-health/staging -f source_run_id=<frontend-deploy-dev-run-id>
 ```
+
+`<source_run_id>` can also be a successful `Frontend: Build Dev` run id when workflow auto-resolution to linked Deploy Dev is available.
 
 ### Production (manual confirmation required)
 
@@ -118,6 +121,13 @@ gh run view <run-id> --log-failed
 
 Report failing step immediately and stop the rollout chain.
 
+### Mandatory completion discipline
+
+- Do not end the deploy task while any started workflow/process is still running.
+- Wait for all triggered runs to finish and verify final conclusions explicitly.
+- If a run fails, inspect logs, fix what is actionable, and re-run until success or clear blocker.
+- Final report is allowed only after all started deploy/verification runs are complete.
+
 ## 5) Post-deploy verification
 
 Minimum checks per environment:
@@ -125,6 +135,9 @@ Minimum checks per environment:
   - `https://dev.lissa-health.com/health`
   - `https://staging.lissa-health.com/health`
   - `https://lissa-health.com/health` (prod)
+- Transport smoke must pass:
+  - JSON-RPC: `system.health`, `system.ready`
+  - WS: connect/subscribe/publication smoke on `/connection/websocket`
 - Workflow smoke job result (Playwright step in workflow).
 - For static-landing builds:
   - first root visit renders static landing correctly (full-width `body/#app`, no broken critical CSS),
@@ -189,4 +202,4 @@ After every deploy (success or failure), analyze the run and update knowledge:
    - `confirm_deploy=DEPLOY` is required for prod workflows — always include this input.
    - Deploy lock `frontend-runtime-deploy-lock` serializes all frontend deploy workflows — do not trigger multiple deploy envs simultaneously.
    - Frontend CI can be slow (~17 min) on the self-hosted runner under CPU contention — if CI is the blocking gate, check runner load before re-triggering.
-   - `source_run_id` for staging/prod promotion should reference the preceding environment's successful deploy run, not a CI run.
+  - `source_run_id` for staging/prod promotion should resolve to preceding environment's successful deploy run; if operator gives Build Dev run id, auto-resolve it to linked Deploy Dev run before dispatch.
