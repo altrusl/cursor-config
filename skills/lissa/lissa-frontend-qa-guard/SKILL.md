@@ -39,6 +39,18 @@ Run:
 
 Ensure `pnpm-lock.yaml` is up-to-date. CI uses strict `--frozen-lockfile` and will fail if the lockfile drifts from `package.json`.
 
+## CI storage pressure (early warning)
+
+Before interpreting CI failures, snapshot Actions artifact usage:
+
+- `gh api repos/<owner>/<repo>/actions/artifacts --paginate --jq '[.artifacts[]] | {count:length, size_mb: ((map(.size_in_bytes) | add // 0) / 1048576)}'`
+
+If runs fail on `Failed to CreateArtifact`:
+
+- classify this as **platform CI noise** first (not immediate product regression),
+- prioritize lint/type-check/build/test outcomes over diagnostic artifact upload failures,
+- mention `promote_*_tag` fallback path in deploy readiness notes.
+
 ## Lint (mandatory for code changes)
 
 Run:

@@ -31,6 +31,7 @@ Run:
   - `FRONTEND_LINT_TIMEOUT_SECONDS=60 pnpm lint`
   - `ESLINT_COMPAT_TIMEOUT_MS=90000 pnpm lint:eslint:compat:changed`
 - `gh auth status` (if `gh` fails due to proxy, run with the prefix below)
+- `gh api repos/<owner>/<repo>/actions/artifacts --paginate` (artifact storage pressure snapshot before rollout)
 
 If `gh` fails with proxy-related errors (e.g. `socks5h`), use:
 
@@ -56,6 +57,17 @@ Mandatory promotion gate for `staging`/`prod`:
 - deploy only from `main`;
 - for promotion workflows, resolve source via immutable release manifest (`source_run_id`) or explicit promote tag;
 - `source_run_id` may reference either successful `Frontend: Deploy Dev` run (preferred) or successful `Frontend: Build Dev` run (must be auto-resolved to linked Deploy Dev run before artifact promotion).
+
+### Artifact fallback path (mandatory when manifest chain is broken)
+
+If deploy fails on `download-artifact` (or upstream upload failed with quota):
+
+1. Extract immutable promote tag from successful upstream logs/summary:
+   - `gh run view <build-or-deploy-run-id> --log | rg "promote_build_tag|promote_dev_tag|FRONTEND_IMAGE|immutable"`
+2. Re-dispatch workflow with explicit promote input:
+   - dev deploy fallback: `-f promote_build_tag=<immutable-tag>`
+   - staging/prod fallback: `-f promote_dev_tag=<immutable-tag>`
+3. Record source run + tag in deploy report.
 
 ### Dev
 
@@ -203,3 +215,4 @@ After every deploy (success or failure), analyze the run and update knowledge:
    - Deploy lock `frontend-runtime-deploy-lock` serializes all frontend deploy workflows — do not trigger multiple deploy envs simultaneously.
    - Frontend CI can be slow (~17 min) on the self-hosted runner under CPU contention — if CI is the blocking gate, check runner load before re-triggering.
   - `source_run_id` for staging/prod promotion should resolve to preceding environment's successful deploy run; if operator gives Build Dev run id, auto-resolve it to linked Deploy Dev run before dispatch.
+  - If artifact storage is saturated, avoid blocking rollout on manifest download and use explicit `promote_*_tag` inputs.

@@ -43,6 +43,18 @@ Run:
 
 If any file looks like a secret (keys, tokens, `.env`), stop and exclude it from git.
 
+## CI storage pressure (early warning)
+
+Before relying on CI artifact-heavy diagnostics, snapshot Actions artifact usage:
+
+- `gh api repos/<owner>/<repo>/actions/artifacts --paginate --jq '[.artifacts[]] | {count:length, size_mb: ((map(.size_in_bytes) | add // 0) / 1048576)}'`
+
+If storage is near limit or recent runs fail with `Failed to CreateArtifact`:
+
+- classify this as **platform CI noise** (not product regression),
+- continue local QA gate and prioritize test/build pass status over diagnostic artifact uploads,
+- mention explicit `promote_*_tag` fallback in deploy handoff notes.
+
 ## Formatting (mandatory)
 
 Project style is enforced by `./format.sh`.

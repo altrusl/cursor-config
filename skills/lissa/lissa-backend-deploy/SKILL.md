@@ -23,6 +23,7 @@ Run:
 - `git status --short --branch`
 - `git log -1 --oneline`
 - `gh auth status` (if `gh` fails due to proxy, run with the prefix below)
+- `gh api repos/<owner>/<repo>/actions/artifacts --paginate` (artifact storage pressure snapshot before rollout)
 
 If `gh` fails with proxy-related errors (e.g. `socks5h`), use:
 
@@ -67,6 +68,17 @@ gh workflow run deploy-dev-docker-image.yaml --ref main -f run_chunked_smoke=tru
 ```
 
 *Note: Prod deploy now promotes the staging image instead of rebuilding. Ensure `preprod-readiness-gate` checks (CI + Staging deploy) are green for the commit.*
+
+### Artifact fallback path (mandatory when manifest chain is broken)
+
+If deploy fails on `download-artifact` (or upstream build failed upload due to quota):
+
+1. Get immutable promote tag from successful upstream run logs/summary:
+   - `gh run view <build-or-deploy-run-id> --log | rg "promote_build_tag|promote_dev_tag|BACKEND_IMAGE|immutable"`
+2. Re-dispatch deploy workflow with explicit promote input instead of artifact dependency:
+   - dev deploy fallback: pass `-f promote_build_tag=<immutable-tag>`
+   - staging/prod/healthvault fallback: pass `-f promote_dev_tag=<immutable-tag>`
+3. Keep evidence in the report: include source run id, extracted tag, and re-run URL.
 
 If changes touch host cron artifacts (`ops/cron/**`, `scripts/ops/**`):
 
@@ -154,4 +166,5 @@ After every deploy (success or failure), analyze the run and update knowledge:
    - `confirm_deploy=DEPLOY` is required for prod and healthvault workflows — always include this input.
    - Promotion gates require successful preceding workflows — check with `gh run list` before triggering downstream deploys.
    - Deploy lock `backend-runtime-deploy-lock` serializes all backend deploy workflows — do not trigger multiple deploy envs simultaneously; wait for each to complete.
+  - If artifact storage is saturated, `download-artifact` can fail even when build otherwise succeeds; use explicit `promote_*_tag` fallback and continue rollout.
 

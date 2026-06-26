@@ -38,6 +38,7 @@ Read first:
 4. Root cause:
    - primary technical root cause,
    - contributing factors (process/tooling/monitoring gaps).
+   - classify each root cause as platform/infra vs product/domain.
 5. Action items:
    - immediate containment,
    - short-term fixes,
@@ -78,6 +79,9 @@ Window: <start> - <end>
 ## Root Cause
 - Primary: ...
 - Contributing: ...
+- Classification:
+  - Platform/Infrastructure: ...
+  - Product/Domain: ...
 
 ## Resolution
 - ...

@@ -27,6 +27,9 @@ When invoked:
    - do not mix synthetic test failures with customer-impacting incidents.
    - treat events as synthetic/noise when signals match test workflows (`tests.*`, `jsonrpc-shadow`), `userId=0` polling bursts, or access-deny probes from internal automation windows.
    - separate CI/test noise from background operational noise (for example, routine cron/service health checks).
+   - explicitly split confirmed incidents into:
+     - **Platform/Infrastructure incidents** (CI quota saturation, env routing, runner/network issues),
+     - **Product/Application incidents** (business logic bugs, API regressions, domain workflow failures).
 4. Investigate top user-impacting issues first:
    - identify probable root cause from logs/context payloads,
    - map each issue to affected feature and severity.
@@ -41,6 +44,7 @@ When invoked:
 
 Report format:
 - **Executive Summary:** top 3 risks and overall prod health.
+- **Platform/Infrastructure Incidents:** prioritized list with evidence, severity, and blast radius.
 - **User-Impacting Incidents:** prioritized list with evidence and severity.
 - **CI/CD/Test Noise:** separate table/list of synthetic failures.
 - **Document Processing Findings:** failure modes, fallback reasons, affected scope.

@@ -40,6 +40,9 @@ Always read first:
    - query `logs`, `job_queue`, domain tables (`health_records`, `document_assets`, billing tables).
 5. **Root cause hypothesis**
    - link exception to exact stage (`document.process`, `health-record.process`, etc.).
+   - classify issue as:
+     - platform/infra (`quota`, routing, runner/network, host capacity), or
+     - product/domain (validation, logic, schema, feature behavior).
 6. **Action**
    - provide fix or mitigation with verification plan.
 
@@ -113,6 +116,7 @@ Return a compact incident summary:
 ```markdown
 Environment: <env>
 Symptoms: <what failed>
+Incident class: <platform|product|mixed>
 Evidence:
 - <log line / query finding 1>
 - <log line / query finding 2>

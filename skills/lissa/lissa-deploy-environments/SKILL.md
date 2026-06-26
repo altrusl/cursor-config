@@ -1,4 +1,4 @@
----
+отчет, как они распределены и рекомендации---
 name: lissa-deploy-environments
 description: "[Lissa Health] Deploy Lissa Health backend/frontend to staging, production, or healthvault with a strict preflight, workflow run, verification, and rollback flow. Use when the user asks to deploy, release, run GitHub Actions workflows, promote builds, or verify deployment health. Only for /src/lissa-health/ projects."
 ---
@@ -37,6 +37,7 @@ Treat those rules as source of truth for environment mapping and deployment poli
    - Confirm required workflow inputs.
    - If target is `staging` / `prod` / `healthvault` and target SHA is not in `main`, stop and merge locally to `main` first, then push.
    - For promotion workflows, prefer `source_run_id` + release manifest artifact over mutable runtime `.env` discovery.
+   - Snapshot artifact pressure (`gh api repos/<owner>/<repo>/actions/artifacts --paginate`) and prepare fallback if storage is saturated.
 3. **Run workflow**
    - Trigger with `gh workflow run ... --ref ... -f ...`.
    - Track latest run via `gh run list --workflow ... --limit 1`.
@@ -44,6 +45,7 @@ Treat those rules as source of truth for environment mapping and deployment poli
    - For `dev` manual dispatch use fast defaults; enable deep checks only by explicit input:
      - frontend: `run_critical_smoke=true`
      - backend: `run_chunked_smoke=true`
+   - If manifest download/upload fails due to storage quota, fallback to explicit immutable promote inputs (`promote_build_tag`, `promote_dev_tag`) and re-run.
 4. **Verify runtime**
    - `/health`
    - `system.health`
