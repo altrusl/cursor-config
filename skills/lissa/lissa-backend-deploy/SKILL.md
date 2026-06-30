@@ -80,6 +80,12 @@ If deploy fails on `download-artifact` (or upstream build failed upload due to q
    - staging/prod/healthvault fallback: pass `-f promote_dev_tag=<immutable-tag>`
 3. Keep evidence in the report: include source run id, extracted tag, and re-run URL.
 
+Operational nuance for `Backend: Deploy Dev`:
+
+- First wait for the auto `workflow_run` deploy conclusion before manual fallback dispatch.
+- Current workflow may resolve promotion source via local Docker/registry tag lookup even when manifest artifact download fails.
+- Dispatch manual `workflow_dispatch` fallback only if auto run actually concludes `failure` with unresolved promotion source.
+
 If changes touch host cron artifacts (`ops/cron/**`, `scripts/ops/**`):
 
 - treat cron rollout as part of deployment scope;
